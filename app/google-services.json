@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "693337871549",
+    "project_id": "sim-details-96f1d",
+    "storage_bucket": "sim-details-96f1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693337871549:android:d078f5ca00c7d5d21793d4",
+        "android_client_info": {
+          "package_name": "com.example.simdetails"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "693337871549-k2ecl8lhcm25ejmpojkurkm6ofn9ue1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-7lvDC31nEagH2NoRaNoWCaXSlxeSVyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "693337871549-k2ecl8lhcm25ejmpojkurkm6ofn9ue1q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

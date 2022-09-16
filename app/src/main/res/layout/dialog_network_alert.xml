@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_dialog_border"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:focusable="true"
+            android:padding="@dimen/_5sdp"
+            app:srcCompat="@drawable/ic_search_cancel" />
+
+        <RelativeLayout
+            android:id="@+id/main_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_close"
+            android:layout_centerInParent="true"
+            android:paddingBottom="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/iv_alert"
+                android:layout_width="@dimen/_51sdp"
+                android:layout_height="@dimen/_33sdp"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/ic_no_connection" />
+
+
+            <TextView
+                android:id="@+id/tv_title"
+                style="@style/TexView.Demi.Woodsmoke.20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_alert"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:gravity="center"
+                tools:text="No internet" />
+
+            <TextView
+                android:id="@+id/tv_msg"
+                style="@style/TexView.Regular.Nevada.12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_title"
+                android:paddingBottom="@dimen/_30sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/_31sdp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_marginEnd="@dimen/_31sdp"
+                android:gravity="center"
+                tools:text="Check your internet connection and try again" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
