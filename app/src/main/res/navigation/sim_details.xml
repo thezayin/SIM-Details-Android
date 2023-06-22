@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_dash_board"
-        android:name="com.example.simdetails.ui.dashboard.DashBoard"
+        android:name="com.bluelock.simdetails.ui.dashboard.DashBoard"
         android:label="DashBoard"
         tools:layout="@layout/fragment_dash_board">
 
@@ -23,22 +23,25 @@
         <action
             android:id="@+id/action_fragment_dash_board_to_browserFragment"
             app:destination="@id/browserFragment" />
+        <action
+            android:id="@+id/action_fragment_dash_board_to_settingFragment"
+            app:destination="@id/settingFragment" />
     </fragment>
 
 
     <fragment
         android:id="@+id/fragmentContactInfo"
-        android:name="com.example.simdetails.ui.contactinfo.FragmentContactInfo"
+        android:name="com.bluelock.simdetails.ui.contactinfo.FragmentContactInfo"
         android:label="fragment_contact_info"
         tools:layout="@layout/fragment_contact_info" />
     <fragment
         android:id="@+id/fragmentDiscalimer"
-        android:name="com.example.simdetails.ui.discalimer.FragmentDiscalimer"
+        android:name="com.bluelock.simdetails.ui.discalimer.FragmentDiscalimer"
         android:label="fragment_discalimer"
         tools:layout="@layout/fragment_discalimer" />
     <fragment
         android:id="@+id/browserFragment"
-        android:name="com.example.simdetails.ui.webview.BrowserFragment"
+        android:name="com.bluelock.simdetails.ui.webview.BrowserFragment"
         android:label="fragment_browser"
         tools:layout="@layout/fragment_browser" >
         <argument
@@ -47,11 +50,16 @@
     </fragment>
     <fragment
         android:id="@+id/serverSelectionFragment"
-        android:name="com.example.simdetails.ui.selectserver.ServerSelectionFragment"
+        android:name="com.bluelock.simdetails.ui.selectserver.ServerSelectionFragment"
         android:label="fragment_server_selection"
         tools:layout="@layout/fragment_server_selection">
         <action
             android:id="@+id/action_serverSelectionFragment_to_browserFragment"
             app:destination="@id/browserFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.bluelock.simdetails.ui.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
 </navigation>

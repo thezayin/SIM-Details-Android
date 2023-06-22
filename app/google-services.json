@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "693337871549",
-    "project_id": "sim-details-96f1d",
-    "storage_bucket": "sim-details-96f1d.appspot.com"
+    "project_number": "647704154893",
+    "project_id": "sim-details-8a193",
+    "storage_bucket": "sim-details-8a193.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:693337871549:android:d078f5ca00c7d5d21793d4",
+        "mobilesdk_app_id": "1:647704154893:android:abb875c0067daeef7dd644",
         "android_client_info": {
-          "package_name": "com.example.simdetails"
+          "package_name": "com.bluelock.simdetails"
         }
       },
       "oauth_client": [
         {
-          "client_id": "693337871549-k2ecl8lhcm25ejmpojkurkm6ofn9ue1q.apps.googleusercontent.com",
+          "client_id": "647704154893-bnhubedhtbsb20hrmt46lr92uacpfpvk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD-7lvDC31nEagH2NoRaNoWCaXSlxeSVyg"
+          "current_key": "AIzaSyBEzcCVrmg7HS50zbJOcMJoYV-krna4_mU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "693337871549-k2ecl8lhcm25ejmpojkurkm6ofn9ue1q.apps.googleusercontent.com",
+              "client_id": "647704154893-bnhubedhtbsb20hrmt46lr92uacpfpvk.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

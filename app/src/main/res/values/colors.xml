@@ -11,11 +11,13 @@
     <color name="bluish">#80ced6</color>
     <color name="brown">#a96e5b</color>
 
+    <color name="light_gray">#DEDEDE</color>
+    <color name="ad_color">#3C3E42</color>
     <color name="bluee">#12e4d9</color>
     <color name="colorPrimary">#007dc5</color>
     <color name="primary">#007dc5</color>
     <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#30BFB1</color>
+    <color name="colorAccent">#FAC53B</color>
     <color name="ceulean_two">#007dc5</color>
     <color name="Quaternary_04">#ffd33f</color>
     <color name="Tertiary_04">#f9f9f9</color>

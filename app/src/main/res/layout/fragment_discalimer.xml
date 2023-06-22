@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_two"
-    android:orientation="vertical"
-    android:paddingHorizontal="@dimen/_25sdp">
+   >
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/icBack"
         android:layout_width="@dimen/_28sdp"
         android:layout_height="@dimen/_28sdp"
+        android:layout_marginHorizontal="@dimen/_25sdp"
         android:layout_marginTop="@dimen/_60sdp"
         android:background="@drawable/icon_back"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,12 +21,13 @@
         android:id="@+id/materialTextView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_60sdp"
-        android:fontFamily="@font/aspira_bold"
+        android:layout_marginHorizontal="@dimen/_25sdp"
+
+        android:fontFamily="sans-serif-condensed-medium"
         android:text="Disclaimer"
-        android:textColor="#003c5f"
-        android:textSize="@dimen/_20sdp"
+        android:textColor="@color/woodsmoke"
+        android:textSize="@dimen/_16ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,16 +35,23 @@
         android:id="@+id/appCompatTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
-        android:fontFamily="@font/aspira_regular"
+        android:layout_marginTop="@dimen/_100sdp"
+        android:layout_marginHorizontal="@dimen/_25sdp"
+android:paddingHorizontal="@dimen/_25sdp"
+        android:fontFamily="sans-serif-condensed-medium"
         android:text="@string/all_the_information_provided_in_this_application_is_hosted_on_public_doamins_and_copyright_of_their_respective_owners_we_do_not_claim_any_information_provided_in_the_application_we_just_provided_an_organised_way_of_surfing_and_no_pledge_any_given_that_hte_information_provided_is_exact"
-        android:textColor="@color/astronaut_blue"
-        android:textSize="@dimen/_16ssp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/woodsmoke"
+        android:textSize="@dimen/_12ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialTextView3" />
 
-
+    <FrameLayout
+        android:id="@+id/nativeView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
