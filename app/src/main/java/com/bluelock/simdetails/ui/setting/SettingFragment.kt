@@ -70,7 +70,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     showInterstitialAd {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://bluelocksolutions.blogspot.com/p/terms-and-conditions-for-instagram.html")
+                            Uri.parse("https://bluelocksolutions.blogspot.com/2023/06/terms-and-conditions-for-pak-sim-details.html")
                         )
                         startActivity(intent)
                     }
@@ -79,7 +79,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     showInterstitialAd {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://bluelocksolutions.blogspot.com/p/privacy-policy-for-instagram-downloader.html")
+                            Uri.parse("https://bluelocksolutions.blogspot.com/2023/06/privacy-policy-for-pak-sim-details-app.html")
                         )
                         startActivity(intent)
                     }
