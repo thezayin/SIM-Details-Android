@@ -19,7 +19,9 @@ import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
 import com.example.analytics.dependencies.Analytics
+import com.example.analytics.events.AnalyticsEvent
 import com.example.analytics.qualifiers.GoogleAnalytics
+import com.example.analytics.utils.AnalyticsConstant
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -48,11 +50,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
     override fun onCreatedView() {
         observer()
         showNativeAd()
-        showDropDown()
+        if (remoteConfig.showDropDownAd) {
+            showDropDown()
+        }
     }
 
     override fun onDestroyed() {
-        showInterstitialAd {  }
+        showInterstitialAd { }
     }
 
     private fun observer() {
@@ -65,6 +69,14 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                 }
 
                 btnBack.setOnClickListener {
+                    analytics.logEvent(
+                        AnalyticsEvent.NavigationEvent(
+                            status = AnalyticsConstant.GO_BACK,
+                            origin = AnalyticsConstant.SETTING_FRAGMENT
+                        )
+                    )
+
+
                     showInterstitialAd {
                         showInterstitialAd {
                             findNavController().navigateUp()
@@ -73,6 +85,14 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                 }
 
                 lTerm.setOnClickListener {
+
+                    analytics.logEvent(
+                        AnalyticsEvent.NavigationEvent(
+                            status = AnalyticsConstant.TERMS_COND,
+                            origin = AnalyticsConstant.SETTING_FRAGMENT
+                        )
+                    )
+
                     showInterstitialAd {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
@@ -82,6 +102,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     }
                 }
                 lPrivacy.setOnClickListener {
+                    analytics.logEvent(
+                        AnalyticsEvent.NavigationEvent(
+                            status = AnalyticsConstant.PRIVACY_POLICY,
+                            origin = AnalyticsConstant.SETTING_FRAGMENT
+                        )
+                    )
+
                     showInterstitialAd {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
@@ -91,6 +118,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     }
                 }
                 lContact.setOnClickListener {
+                    analytics.logEvent(
+                        AnalyticsEvent.NavigationEvent(
+                            status = AnalyticsConstant.CONTACT_US,
+                            origin = AnalyticsConstant.SETTING_FRAGMENT
+                        )
+                    )
+
                     showInterstitialAd {
                         val emailIntent = Intent(
                             Intent.ACTION_SENDTO,
@@ -102,6 +136,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     }
                 }
                 lShare.setOnClickListener {
+                    analytics.logEvent(
+                        AnalyticsEvent.NavigationEvent(
+                            status = AnalyticsConstant.SHARE_APP,
+                            origin = AnalyticsConstant.SETTING_FRAGMENT
+                        )
+                    )
+
                     try {
                         val shareIntent = Intent(Intent.ACTION_SEND)
                         shareIntent.type = "text/plain"
@@ -163,6 +204,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
             }
         }
     }
+
     private fun showDropDown() {
         val nativeAdCheck = googleManager.createNativeFull()
         val nativeAd = googleManager.createNativeFull()
@@ -183,6 +225,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
             binding.btnDropDown.setOnClickListener {
                 binding.dropLayout.visibility = View.GONE
+
+                analytics.logEvent(
+                    AnalyticsEvent.AdDropDown(
+                        click = AnalyticsConstant.DROP_DOWN_BTN_CLICKED,
+                        origin = AnalyticsConstant.DASHBOARD
+                    )
+                )
             }
             binding.btnDropUp.visibility = View.INVISIBLE
 

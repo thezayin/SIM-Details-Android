@@ -14,7 +14,9 @@ import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
 import com.example.analytics.dependencies.Analytics
+import com.example.analytics.events.AnalyticsEvent
 import com.example.analytics.qualifiers.GoogleAnalytics
+import com.example.analytics.utils.AnalyticsConstant
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -47,7 +49,9 @@ class FragmentDiscalimer : BaseFragment<FragmentDiscalimerBinding>() {
 
     override fun onCreatedView() {
         showNativeAd()
-        showDropDown()
+        if (remoteConfig.showDropDownAd) {
+            showDropDown()
+        }
         binding.icBack.setOnClickListener {
             showInterstitialAd {
                 findNavController().navigateUp()
@@ -119,6 +123,13 @@ class FragmentDiscalimer : BaseFragment<FragmentDiscalimerBinding>() {
 
             binding.btnDropDown.setOnClickListener {
                 binding.dropLayout.visibility = View.GONE
+
+                analytics.logEvent(
+                    AnalyticsEvent.AdDropDown(
+                        click = AnalyticsConstant.DROP_DOWN_BTN_CLICKED,
+                        origin = AnalyticsConstant.DASHBOARD
+                    )
+                )
             }
             binding.btnDropUp.visibility = View.INVISIBLE
 

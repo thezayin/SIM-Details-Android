@@ -534,26 +534,35 @@ AnalyticsEvent(
         }
     )
 
-    class ImageSavedEvent(
-        private val origin: String,
-        private val isPremium: Boolean
+    class SelectServer(
+        private val server: String,
     ) : AnalyticsEvent(
         event = IMAGE_SAVED,
         args = Bundle().apply {
-            putString("origin", origin)
-            putBoolean("isPremium", isPremium)
+            putString("server", server)
         }
     )
 
 
-    class EnhanceFeatureSelectionEvent(
-        private val source: String,
-        private val editingFeature: String
+    class AdDropDown(
+        private val click: String,
+        private val origin: String
     ) : AnalyticsEvent(
         event = ENHANCE_FEATURE_SELECTION,
         args = Bundle().apply {
-            putString("source", source)
-            putString("editingFeature", editingFeature)
+            putString("clicked", click)
+            putString("editingFeature", origin)
+        }
+    )
+
+    class NavigationEvent(
+        private val status: String,
+        private val origin: String
+    ): AnalyticsEvent(
+        event = ENHANCE_FEATURE_SELECTION,
+        args = Bundle().apply {
+            putString("status", status)
+            putString("origin", origin)
         }
     )
 
@@ -596,6 +605,8 @@ AnalyticsEvent(
             )
         }
     }
+
+
 
     class InterstitialAdEvent(
         private val status: String,

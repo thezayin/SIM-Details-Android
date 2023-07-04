@@ -21,7 +21,9 @@ import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
 import com.example.analytics.dependencies.Analytics
+import com.example.analytics.events.AnalyticsEvent
 import com.example.analytics.qualifiers.GoogleAnalytics
+import com.example.analytics.utils.AnalyticsConstant
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -60,7 +62,9 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
     override fun onCreatedView() {
         setUpRV()
         clickedListeners()
-        showDropDown()
+        if (remoteConfig.showDropDownAd) {
+            showDropDown()
+        }
         showNativeAd()
         if (checkForInternet(requireContext())) {
             checkForInternet(requireContext())
@@ -72,12 +76,18 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
     }
 
     override fun onDestroyed() {
-        showInterstitialAd {  }
+        showInterstitialAd { }
     }
 
     private fun clickedListeners() {
         binding.apply {
             btnSetting.setOnClickListener {
+                analytics.logEvent(
+                    AnalyticsEvent.NavigationEvent(
+                        status = AnalyticsConstant.SETTING,
+                        origin = AnalyticsConstant.DASHBOARD
+                    )
+                )
                 showInterstitialAd {
                     findNavController().navigate(DashBoardDirections.actionFragmentDashBoardToSettingFragment())
                 }
@@ -92,8 +102,21 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
                                 if (position == 0) {
 
                                     findNavController().navigate(DashBoardDirections.actionFragmentDashBoardToServerSelectionFragment())
+
+                                    analytics.logEvent(
+                                        AnalyticsEvent.NavigationEvent(
+                                            status = AnalyticsConstant.SERVER,
+                                            origin = AnalyticsConstant.DASHBOARD
+                                        )
+                                    )
                                 }
                                 if (position == 1) {
+                                    analytics.logEvent(
+                                        AnalyticsEvent.NavigationEvent(
+                                            status = AnalyticsConstant.CONTACT_INFO,
+                                            origin = AnalyticsConstant.DASHBOARD
+                                        )
+                                    )
 
                                     findNavController().navigate(
                                         DashBoardDirections.actionFragmentDashBoardToBrowserFragment(
@@ -101,8 +124,15 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
                                         )
                                     )
                                 }
+
                                 if (position == 2) {
 
+                                    analytics.logEvent(
+                                        AnalyticsEvent.NavigationEvent(
+                                            status = AnalyticsConstant.DISCLAIMER,
+                                            origin = AnalyticsConstant.DASHBOARD
+                                        )
+                                    )
                                     findNavController().navigate(
                                         DashBoardDirections.actionFragmentDashBoardToFragmentDiscalimer()
                                     )
@@ -121,6 +151,13 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
                         }
 
                         override fun onItemLongClick(view: View?, position: Int) {
+                            analytics.logEvent(
+                                AnalyticsEvent.NavigationEvent(
+                                    status = AnalyticsConstant.LONG_CLICK,
+                                    origin = AnalyticsConstant.DASHBOARD
+                                )
+                            )
+
                             showInterstitialAd {
                                 Toast.makeText(
                                     requireActivity(),
@@ -153,7 +190,7 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
     }
 
     private fun showInterstitialRewardAd(callback: () -> Unit) {
-        Log.d("jeje_inter","intersetial_ad")
+        Log.d("jeje_inter", "intersetial_ad")
         if (remoteConfig.showInterstitial) {
             val ad: RewardedInterstitialAd? = googleManager.createInterstitialRewardAd()
             if (ad == null) {
@@ -217,6 +254,7 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
             }
         }
     }
+
     private fun showDropDown() {
         val nativeAdCheck = googleManager.createNativeAdForLanguage()
         val nativeAd = googleManager.createNativeAdForLanguage()
@@ -237,6 +275,12 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
 
             binding.btnDropDown.setOnClickListener {
                 binding.dropLayout.visibility = View.GONE
+                analytics.logEvent(
+                    AnalyticsEvent.AdDropDown(
+                        click = AnalyticsConstant.DROP_DOWN_BTN_CLICKED,
+                        origin = AnalyticsConstant.DASHBOARD
+                    )
+                )
             }
             binding.btnDropUp.visibility = View.INVISIBLE
 

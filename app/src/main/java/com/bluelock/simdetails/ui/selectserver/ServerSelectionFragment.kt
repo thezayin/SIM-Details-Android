@@ -22,7 +22,9 @@ import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
 import com.example.analytics.dependencies.Analytics
+import com.example.analytics.events.AnalyticsEvent
 import com.example.analytics.qualifiers.GoogleAnalytics
+import com.example.analytics.utils.AnalyticsConstant
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -63,7 +65,9 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
         clickedListeners()
         setUpRV()
         showNativeAd()
-        showDropDown()
+        if (remoteConfig.showDropDownAd) {
+            showDropDown()
+        }
         if (checkForInternet(requireContext())) {
             checkForInternet(requireContext())
         } else {
@@ -72,7 +76,7 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
     }
 
     override fun onDestroyed() {
-        showInterstitialAd {  }
+        showInterstitialAd { }
     }
 
 
@@ -90,6 +94,12 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                         override fun onItemClick(view: View, position: Int) {
                             showInterstitialAd {
                                 if (position == 0) {
+                                    analytics.logEvent(
+                                        AnalyticsEvent.SelectServer(
+                                            server = AnalyticsConstant.SERVER_ONE,
+                                        )
+                                    )
+
                                     findNavController().navigate(
                                         ServerSelectionFragmentDirections.actionServerSelectionFragmentToBrowserFragment(
                                             server1
@@ -97,6 +107,12 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                                     )
                                 }
                                 if (position == 1) {
+                                    analytics.logEvent(
+                                        AnalyticsEvent.SelectServer(
+                                            server = AnalyticsConstant.SERVER_TWO,
+                                        )
+                                    )
+
                                     findNavController().navigate(
                                         ServerSelectionFragmentDirections.actionServerSelectionFragmentToBrowserFragment(
                                             server2
@@ -104,6 +120,13 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                                     )
                                 }
                                 if (position == 2) {
+                                    analytics.logEvent(
+                                        AnalyticsEvent.SelectServer(
+                                            server = AnalyticsConstant.SERVER_THREE,
+                                        )
+                                    )
+
+
                                     findNavController().navigate(
                                         ServerSelectionFragmentDirections.actionServerSelectionFragmentToBrowserFragment(
                                             server3
@@ -111,6 +134,13 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                                     )
                                 }
                                 if (position == 3) {
+                                    analytics.logEvent(
+                                        AnalyticsEvent.SelectServer(
+                                            server = AnalyticsConstant.SERVER_FOUR,
+                                        )
+                                    )
+
+
                                     findNavController().navigate(
                                         ServerSelectionFragmentDirections.actionServerSelectionFragmentToBrowserFragment(
                                             server4
@@ -121,6 +151,15 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                         }
 
                         override fun onItemLongClick(view: View?, position: Int) {
+
+                            analytics.logEvent(
+                                AnalyticsEvent.NavigationEvent(
+                                    status = AnalyticsConstant.LONG_CLICK,
+                                    origin = AnalyticsConstant.SERVER
+                                )
+                            )
+
+
                             Toast.makeText(requireActivity(), "Please Click", Toast.LENGTH_SHORT)
                                 .show()
                         }
@@ -189,6 +228,7 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
             }
         }
     }
+
     private fun showDropDown() {
         val nativeAdCheck = googleManager.createNativeFull()
         val nativeAd = googleManager.createNativeFull()
@@ -209,6 +249,13 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
 
             binding.btnDropDown.setOnClickListener {
                 binding.dropLayout.visibility = View.GONE
+
+                analytics.logEvent(
+                    AnalyticsEvent.AdDropDown(
+                        click = AnalyticsConstant.DROP_DOWN_BTN_CLICKED,
+                        origin = AnalyticsConstant.DASHBOARD
+                    )
+                )
             }
             binding.btnDropUp.visibility = View.INVISIBLE
 

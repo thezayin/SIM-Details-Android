@@ -9,12 +9,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-
 private const val TAG = "RemoteConfig"
 private const val SHOW_APP_OPEN = "show_app_open_ad"
 private const val SHOW_INTERSTITIAL = "show_interstitial"
 private const val NATIVE_AD = "native_ad_on_all_features"
 private const val SHOW_TITLE = "show_title"
+private const val SHOW_DROP_DOWN = "show_drop_down_dialog"
 
 @Singleton
 class RemoteConfig @Inject constructor() {
@@ -23,7 +23,8 @@ class RemoteConfig @Inject constructor() {
         SHOW_APP_OPEN to true,
         SHOW_INTERSTITIAL to true,
         NATIVE_AD to true,
-        SHOW_TITLE to false
+        SHOW_TITLE to false,
+        SHOW_DROP_DOWN to true
     )
 
     private val config = FirebaseRemoteConfig.getInstance().apply {
@@ -53,4 +54,6 @@ class RemoteConfig @Inject constructor() {
     val showTitle: Boolean
         get() = config[SHOW_TITLE].asBoolean()
 
+    val showDropDownAd: Boolean
+        get() = config[SHOW_DROP_DOWN].asBoolean()
 }
