@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import com.bluelock.simdetails.databinding.SplashscreenBinding
 import com.bluelock.simdetails.remote.RemoteConfig
@@ -77,9 +78,15 @@ class SplashScreen : AppCompatActivity() {
     }
 
 
+
+    private fun navigateToNextScreen() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
     private fun getAppOpenAd(): Boolean {
 
-        if (this.isConnected()) return false
+        if (!this.isConnected()) return false
 
         val ad = googleManager.createAppOpenAd() ?: return false
 
@@ -96,12 +103,8 @@ class SplashScreen : AppCompatActivity() {
         }
         ad.show(this)
         return true
-    }
 
-    private fun navigateToNextScreen() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        return false
     }
 
     private fun showInterstitialAd(callback: () -> Unit) {

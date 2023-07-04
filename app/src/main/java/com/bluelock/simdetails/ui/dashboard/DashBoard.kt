@@ -1,5 +1,6 @@
 package com.bluelock.simdetails.ui.dashboard
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.bluelock.simdetails.utils.Urls
 import com.bluelock.simdetails.utils.checkForInternet
 import com.bluelock.simdetails.utils.showBottomSheetDialog
 import com.example.ads.GoogleManager
+import com.example.ads.databinding.MediumNativeAdLayoutBinding
 import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
@@ -25,6 +27,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -57,12 +60,19 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
     override fun onCreatedView() {
         setUpRV()
         clickedListeners()
+        showDropDown()
         showNativeAd()
         if (checkForInternet(requireContext())) {
             checkForInternet(requireContext())
         } else {
             showBottomSheetDialog()
         }
+
+
+    }
+
+    override fun onDestroyed() {
+        showInterstitialAd {  }
     }
 
     private fun clickedListeners() {
@@ -142,6 +152,32 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
         binding.recyclerview.adapter = adapter
     }
 
+    private fun showInterstitialRewardAd(callback: () -> Unit) {
+        Log.d("jeje_inter","intersetial_ad")
+        if (remoteConfig.showInterstitial) {
+            val ad: RewardedInterstitialAd? = googleManager.createInterstitialRewardAd()
+            if (ad == null) {
+                callback.invoke()
+                return
+            } else {
+                ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        super.onAdDismissedFullScreenContent()
+                        callback.invoke()
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(error: AdError) {
+                        super.onAdFailedToShowFullScreenContent(error)
+                        callback.invoke()
+                    }
+                }
+            }
+            ad.show(requireActivity(), null)
+        } else {
+            callback.invoke()
+        }
+    }
+
     private fun showInterstitialAd(callback: () -> Unit) {
         if (remoteConfig.showInterstitial) {
             val ad: InterstitialAd? =
@@ -180,6 +216,32 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
                 binding.nativeView.visibility = View.VISIBLE
             }
         }
+    }
+    private fun showDropDown() {
+        val nativeAdCheck = googleManager.createNativeAdForLanguage()
+        val nativeAd = googleManager.createNativeAdForLanguage()
+        Log.d("ggg_nul", "nativeAd:${nativeAdCheck}")
+
+        nativeAdCheck?.let {
+            Log.d("ggg_lest", "nativeAdEx:${nativeAd}")
+            binding.apply {
+                dropLayout.bringToFront()
+                nativeViewDrop.bringToFront()
+            }
+            val nativeAdLayoutBinding = MediumNativeAdLayoutBinding.inflate(layoutInflater)
+            nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
+            binding.nativeViewDrop.removeAllViews()
+            binding.nativeViewDrop.addView(nativeAdLayoutBinding.root)
+            binding.nativeViewDrop.visibility = View.VISIBLE
+            binding.dropLayout.visibility = View.VISIBLE
+
+            binding.btnDropDown.setOnClickListener {
+                binding.dropLayout.visibility = View.GONE
+            }
+            binding.btnDropUp.visibility = View.INVISIBLE
+
+        }
+
     }
 
 }

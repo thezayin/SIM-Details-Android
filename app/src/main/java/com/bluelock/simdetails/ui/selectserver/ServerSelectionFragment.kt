@@ -1,5 +1,6 @@
 package com.bluelock.simdetails.ui.selectserver
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.bluelock.simdetails.utils.Urls
 import com.bluelock.simdetails.utils.checkForInternet
 import com.bluelock.simdetails.utils.showBottomSheetDialog
 import com.example.ads.GoogleManager
+import com.example.ads.databinding.MediumNativeAdLayoutBinding
 import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
@@ -61,12 +63,16 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
         clickedListeners()
         setUpRV()
         showNativeAd()
-
+        showDropDown()
         if (checkForInternet(requireContext())) {
             checkForInternet(requireContext())
         } else {
             showBottomSheetDialog()
         }
+    }
+
+    override fun onDestroyed() {
+        showInterstitialAd {  }
     }
 
 
@@ -182,6 +188,32 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                 binding.nativeView.visibility = View.VISIBLE
             }
         }
+    }
+    private fun showDropDown() {
+        val nativeAdCheck = googleManager.createNativeFull()
+        val nativeAd = googleManager.createNativeFull()
+        Log.d("ggg_nul", "nativeAd:${nativeAdCheck}")
+
+        nativeAdCheck?.let {
+            Log.d("ggg_lest", "nativeAdEx:${nativeAd}")
+            binding.apply {
+                dropLayout.bringToFront()
+                nativeViewDrop.bringToFront()
+            }
+            val nativeAdLayoutBinding = MediumNativeAdLayoutBinding.inflate(layoutInflater)
+            nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
+            binding.nativeViewDrop.removeAllViews()
+            binding.nativeViewDrop.addView(nativeAdLayoutBinding.root)
+            binding.nativeViewDrop.visibility = View.VISIBLE
+            binding.dropLayout.visibility = View.VISIBLE
+
+            binding.btnDropDown.setOnClickListener {
+                binding.dropLayout.visibility = View.GONE
+            }
+            binding.btnDropUp.visibility = View.INVISIBLE
+
+        }
+
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bluelock.simdetails.ui.discalimer
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import com.bluelock.simdetails.databinding.FragmentDiscalimerBinding
 import com.bluelock.simdetails.remote.RemoteConfig
 import com.bluelock.simdetails.ui.base.BaseFragment
 import com.example.ads.GoogleManager
+import com.example.ads.databinding.MediumNativeAdLayoutBinding
 import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
@@ -45,12 +47,17 @@ class FragmentDiscalimer : BaseFragment<FragmentDiscalimerBinding>() {
 
     override fun onCreatedView() {
         showNativeAd()
+        showDropDown()
         binding.icBack.setOnClickListener {
             showInterstitialAd {
                 findNavController().navigateUp()
             }
         }
 
+    }
+
+    override fun onDestroyed() {
+        showInterstitialAd {  }
     }
 
     private fun showInterstitialAd(callback: () -> Unit) {
@@ -92,4 +99,31 @@ class FragmentDiscalimer : BaseFragment<FragmentDiscalimerBinding>() {
             }
         }
     }
+    private fun showDropDown() {
+        val nativeAdCheck = googleManager.createNativeFull()
+        val nativeAd = googleManager.createNativeFull()
+        Log.d("ggg_nul", "nativeAd:${nativeAdCheck}")
+
+        nativeAdCheck?.let {
+            Log.d("ggg_lest", "nativeAdEx:${nativeAd}")
+            binding.apply {
+                dropLayout.bringToFront()
+                nativeViewDrop.bringToFront()
+            }
+            val nativeAdLayoutBinding = MediumNativeAdLayoutBinding.inflate(layoutInflater)
+            nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
+            binding.nativeViewDrop.removeAllViews()
+            binding.nativeViewDrop.addView(nativeAdLayoutBinding.root)
+            binding.nativeViewDrop.visibility = View.VISIBLE
+            binding.dropLayout.visibility = View.VISIBLE
+
+            binding.btnDropDown.setOnClickListener {
+                binding.dropLayout.visibility = View.GONE
+            }
+            binding.btnDropUp.visibility = View.INVISIBLE
+
+        }
+
+    }
+
 }

@@ -67,7 +67,14 @@
                 android:gravity="center"
                 tools:text="Check your internet connection and try again" />
 
-
+            <FrameLayout
+                android:id="@+id/nativeView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_msg"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
         </RelativeLayout>
 
     </RelativeLayout>

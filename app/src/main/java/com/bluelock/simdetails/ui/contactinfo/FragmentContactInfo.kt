@@ -17,5 +17,4 @@ class FragmentContactInfo : Fragment(R.layout.fragment_contact_info) {
             findNavController().navigateUp()
         }
     }
-
 }
