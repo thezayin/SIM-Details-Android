@@ -12,9 +12,6 @@
         tools:layout="@layout/fragment_dash_board">
 
         <action
-            android:id="@+id/action_fragment_dash_board_to_fragmentContactInfo"
-            app:destination="@id/fragmentContactInfo" />
-        <action
             android:id="@+id/action_fragment_dash_board_to_fragmentDiscalimer"
             app:destination="@id/fragmentDiscalimer" />
         <action
@@ -29,11 +26,6 @@
     </fragment>
 
 
-    <fragment
-        android:id="@+id/fragmentContactInfo"
-        android:name="com.bluelock.simdetails.ui.contactinfo.FragmentContactInfo"
-        android:label="fragment_contact_info"
-        tools:layout="@layout/fragment_contact_info" />
     <fragment
         android:id="@+id/fragmentDiscalimer"
         android:name="com.bluelock.simdetails.ui.discalimer.FragmentDiscalimer"

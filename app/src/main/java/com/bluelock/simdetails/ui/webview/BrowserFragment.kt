@@ -9,6 +9,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bluelock.simdetails.R
+import com.bluelock.simdetails.databinding.DialogLoadingBinding
 import com.bluelock.simdetails.databinding.FragmentBrowserBinding
 import com.bluelock.simdetails.remote.RemoteConfig
 import com.bluelock.simdetails.ui.base.BaseFragment
@@ -25,6 +27,8 @@ import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -34,6 +38,7 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
         FragmentBrowserBinding::inflate
 
     private var nativeAd: NativeAd? = null
+    private var nativeDialog: NativeAd? = null
 
     @Inject
     lateinit var googleManager: GoogleManager
@@ -48,7 +53,7 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
     @Inject
     lateinit var manager: GoogleManager
 
-
+    private lateinit var dialog: BottomSheetDialog
     private val args: BrowserFragmentArgs by navArgs()
     lateinit var progress: ProgressDialog
 
@@ -70,11 +75,36 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
             webView.settings.builtInZoomControls = false
             webView.settings.javaScriptCanOpenWindowsAutomatically = true
             webView.settings.setSupportZoom(true)
-            progress = ProgressDialog.show(activity, "please waite a moment", "Loading...", true)
+            dialog = BottomSheetDialog(
+                requireContext(),
+                R.style.SheetDialog
+            ).also { dialog ->
+                val binding = DialogLoadingBinding.inflate(layoutInflater)
+                dialog.setContentView(binding.root)
+                dialog.behavior.isDraggable = false
+                dialog.setCanceledOnTouchOutside(false)
+                dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                if (remoteConfig.nativeAd) {
+                    nativeDialog = googleManager.createNativeFull()
+                    nativeDialog?.let {
+                        val nativeAdLayoutBinding =
+                            MediumNativeAdLayoutBinding.inflate(layoutInflater)
+                        nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
+                        binding.nativeViewAdDialog.removeAllViews()
+                        binding.nativeViewAdDialog.addView(nativeAdLayoutBinding.root)
+                        binding.nativeViewAdDialog.visibility = View.VISIBLE
+                    }
+                }
+            }
+            dialog.show()
+
+
+
             webView.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
-                    progress.dismiss()
+                    dialog.dismiss()
                 }
+
             }
         }
     }
@@ -113,7 +143,7 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
 
     private fun showNativeAd() {
         if (remoteConfig.nativeAd) {
-            nativeAd = googleManager.createNativeAdSmall()
+            nativeAd = googleManager.createNativeFull()
             nativeAd?.let {
                 val nativeAdLayoutBinding = NativeAdBannerLayoutBinding.inflate(layoutInflater)
                 nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)

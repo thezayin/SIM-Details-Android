@@ -25,11 +25,9 @@ import com.example.analytics.events.AnalyticsEvent
 import com.example.analytics.qualifiers.GoogleAnalytics
 import com.example.analytics.utils.AnalyticsConstant
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -53,10 +51,7 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
     @Inject
     lateinit var manager: GoogleManager
 
-    lateinit var mAdView: AdView
-    private var mInterstitialAd: InterstitialAd? = null
     private val urls = Urls()
-    val locationInfo = urls.locationInfo
     val cincInfo = urls.cincInfo
 
     override fun onCreatedView() {
@@ -141,12 +136,6 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
 
                                     findNavController().navigate(DashBoardDirections.actionFragmentDashBoardToFragmentDiscalimer())
                                 }
-                                if (position == 4) {
-
-                                    findNavController().navigate(DashBoardDirections.actionFragmentDashBoardToFragmentContactInfo())
-
-                                }
-
                             }
                         }
 
@@ -187,32 +176,6 @@ class DashBoard : BaseFragment<FragmentDashBoardBinding>() {
 
         val adapter = CustomAdapter(data)
         binding.recyclerview.adapter = adapter
-    }
-
-    private fun showInterstitialRewardAd(callback: () -> Unit) {
-        Log.d("jeje_inter", "intersetial_ad")
-        if (remoteConfig.showInterstitial) {
-            val ad: RewardedInterstitialAd? = googleManager.createInterstitialRewardAd()
-            if (ad == null) {
-                callback.invoke()
-                return
-            } else {
-                ad.fullScreenContentCallback = object : FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        super.onAdDismissedFullScreenContent()
-                        callback.invoke()
-                    }
-
-                    override fun onAdFailedToShowFullScreenContent(error: AdError) {
-                        super.onAdFailedToShowFullScreenContent(error)
-                        callback.invoke()
-                    }
-                }
-            }
-            ad.show(requireActivity(), null)
-        } else {
-            callback.invoke()
-        }
     }
 
     private fun showInterstitialAd(callback: () -> Unit) {
