@@ -1,4 +1,4 @@
-package ai.vyro.analytics.repository
+package com.example.analytics.repository
 
 import com.example.analytics.dependencies.Analytics
 import com.example.analytics.events.AnalyticsEvent
@@ -17,7 +17,7 @@ class AnalyticsEventsBroadcast @Inject constructor(
 
     override fun logEvent(event: AnalyticsEvent) {
         when (event.event) {
-            "INTERSTITIAL_AD,RATING,MEDIA_PERMISSION, ENHANCE_TUTORIAL, SCREEN_VIEW" -> return
+            "INTERSTITIAL_AD,RATING,CHECK, SIM_DATA, SCREEN_VIEW" -> return
         }
         amplitudeAnalytics.logEvent(event)
         googleAnalytics.logEvent(event)

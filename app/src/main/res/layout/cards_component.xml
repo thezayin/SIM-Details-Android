@@ -21,6 +21,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/card_color"
             android:orientation="horizontal">
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvTitle"
@@ -29,8 +30,8 @@
                 android:fontFamily="@font/aspira_bold"
                 android:gravity="center"
                 android:padding="@dimen/_15sdp"
-                android:text="Add New Record"
-                android:textColor="@color/woodsmoke"
+                android:text="@string/add_new_record"
+                android:textColor="@color/text_color"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"

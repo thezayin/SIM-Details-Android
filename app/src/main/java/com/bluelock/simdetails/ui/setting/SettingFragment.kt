@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.android.installreferrer.BuildConfig
 import com.bluelock.simdetails.R
@@ -27,6 +29,8 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -53,12 +57,36 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         if (remoteConfig.showDropDownAd) {
             showDropDown()
         }
+        showRecursiveAds()
+        showRecursiveInterAd()
     }
 
+    private fun showRecursiveAds() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showNativeAd()
+                    if (remoteConfig.showDropDownAd) {
+                        showDropDown()
+                    }
+                    delay(250L)
+                }
+            }
+        }
+    }
     override fun onDestroyed() {
         showInterstitialAd { }
     }
-
+    private fun showRecursiveInterAd() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showInterstitialAd {  }
+                    delay(950L)
+                }
+            }
+        }
+    }
     private fun observer() {
         lifecycleScope.launch {
             binding.apply {

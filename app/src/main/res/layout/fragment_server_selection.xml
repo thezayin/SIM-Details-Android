@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_two">
+    android:background="@color/back_ground">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/icBack"
@@ -23,8 +23,8 @@
         android:layout_marginStart="@dimen/_35sdp"
         android:layout_marginTop="@dimen/_60sdp"
         android:fontFamily="@font/aspira_bold"
-        android:text="SIM Details Checker"
-        android:textColor="@color/woodsmoke"
+        android:text="@string/sim_details_checker"
+        android:textColor="@color/text_color"
         android:textSize="@dimen/_16sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +38,7 @@
         android:layout_marginTop="@dimen/_25sdp"
         android:fontFamily="sans-serif-condensed-medium"
         android:text="@string/xx"
-        android:textColor="@color/woodsmoke"
+        android:textColor="@color/text_color"
         android:textSize="@dimen/_13ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -122,5 +122,4 @@
             android:layout_height="match_parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_drop_down" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

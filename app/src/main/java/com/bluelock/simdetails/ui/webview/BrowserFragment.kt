@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bluelock.simdetails.R
@@ -30,6 +33,9 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -59,6 +65,8 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
 
     override fun onCreatedView() {
         showNativeAd()
+        showRecursiveAds()
+        showRecursiveInterAd()
         if (remoteConfig.showDropDownAd) {
             showDropDown()
         }
@@ -188,5 +196,27 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
 
     }
 
-
+    private fun showRecursiveAds() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showNativeAd()
+                    if (remoteConfig.showDropDownAd) {
+                        showDropDown()
+                    }
+                    delay(250L)
+                }
+            }
+        }
+    }
+    private fun showRecursiveInterAd() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showInterstitialAd {  }
+                    delay(950L)
+                }
+            }
+        }
+    }
 }

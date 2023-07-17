@@ -1,6 +1,6 @@
 package com.example.analytics.di
 
-import ai.vyro.analytics.repository.AnalyticsEventsBroadcast
+import com.example.analytics.repository.AnalyticsEventsBroadcast
 import com.example.analytics.dependencies.Analytics
 import com.example.analytics.qualifiers.AmplitudeAnalytics
 import com.example.analytics.qualifiers.AnalyticsBroadcast

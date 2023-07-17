@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bluelock.simdetails.data.adapters.CustomAdapter
 import com.bluelock.simdetails.data.model.Title
@@ -30,6 +33,9 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,9 +71,11 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
         clickedListeners()
         setUpRV()
         showNativeAd()
+        showRecursiveInterAd()
         if (remoteConfig.showDropDownAd) {
             showDropDown()
         }
+        showRecursiveAds()
         if (checkForInternet(requireContext())) {
             checkForInternet(requireContext())
         } else {
@@ -263,4 +271,27 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
 
     }
 
+    private fun showRecursiveAds() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showNativeAd()
+                    if (remoteConfig.showDropDownAd) {
+                        showDropDown()
+                    }
+                    delay(250L)
+                }
+            }
+        }
+    }
+    private fun showRecursiveInterAd() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showInterstitialAd {  }
+                    delay(950L)
+                }
+            }
+        }
+    }
 }
