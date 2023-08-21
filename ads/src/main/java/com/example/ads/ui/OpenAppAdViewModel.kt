@@ -5,6 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class OpenAppAdViewModel @Inject constructor(): ViewModel() {
+class OpenAppAdViewModel @Inject constructor() : ViewModel() {
     var tryToShowAd = false
 }

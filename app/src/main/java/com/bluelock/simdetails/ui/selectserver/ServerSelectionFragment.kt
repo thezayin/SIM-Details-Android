@@ -1,11 +1,9 @@
 package com.bluelock.simdetails.ui.selectserver
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -25,9 +23,7 @@ import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
 import com.example.analytics.dependencies.Analytics
-import com.example.analytics.events.AnalyticsEvent
 import com.example.analytics.qualifiers.GoogleAnalytics
-import com.example.analytics.utils.AnalyticsConstant
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -42,8 +38,6 @@ import javax.inject.Inject
 class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentServerSelectionBinding =
         FragmentServerSelectionBinding::inflate
-
-    private val viewModel by viewModels<ServerViewModel>()
 
     private var nativeAd: NativeAd? = null
 
@@ -70,12 +64,12 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
     override fun onCreatedView() {
         clickedListeners()
         setUpRV()
-        showNativeAd()
-        showRecursiveInterAd()
-        if (remoteConfig.showDropDownAd) {
-            showDropDown()
+
+        if (remoteConfig.nativeAd) {
+            showRecursiveAds()
+            showNativeAd()
         }
-        showRecursiveAds()
+
         if (checkForInternet(requireContext())) {
             checkForInternet(requireContext())
         } else {
@@ -84,7 +78,7 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
     }
 
     override fun onDestroyed() {
-        showInterstitialAd { }
+//null
     }
 
 
@@ -92,9 +86,7 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
 
         binding.apply {
             icBack.setOnClickListener {
-                showInterstitialAd {
-                    findNavController().navigateUp()
-                }
+                findNavController().navigateUp()
             }
             recyclerview.addOnItemTouchListener(
                 RecyclerviewClickListener(requireActivity(), recyclerview,
@@ -102,12 +94,6 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                         override fun onItemClick(view: View, position: Int) {
                             showInterstitialAd {
                                 if (position == 0) {
-                                    analytics.logEvent(
-                                        AnalyticsEvent.SelectServer(
-                                            server = AnalyticsConstant.SERVER_ONE,
-                                        )
-                                    )
-
                                     findNavController().navigate(
                                         ServerSelectionFragmentDirections.actionServerSelectionFragmentToBrowserFragment(
                                             server1
@@ -115,12 +101,6 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                                     )
                                 }
                                 if (position == 1) {
-                                    analytics.logEvent(
-                                        AnalyticsEvent.SelectServer(
-                                            server = AnalyticsConstant.SERVER_TWO,
-                                        )
-                                    )
-
                                     findNavController().navigate(
                                         ServerSelectionFragmentDirections.actionServerSelectionFragmentToBrowserFragment(
                                             server2
@@ -128,13 +108,6 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                                     )
                                 }
                                 if (position == 2) {
-                                    analytics.logEvent(
-                                        AnalyticsEvent.SelectServer(
-                                            server = AnalyticsConstant.SERVER_THREE,
-                                        )
-                                    )
-
-
                                     findNavController().navigate(
                                         ServerSelectionFragmentDirections.actionServerSelectionFragmentToBrowserFragment(
                                             server3
@@ -142,13 +115,6 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                                     )
                                 }
                                 if (position == 3) {
-                                    analytics.logEvent(
-                                        AnalyticsEvent.SelectServer(
-                                            server = AnalyticsConstant.SERVER_FOUR,
-                                        )
-                                    )
-
-
                                     findNavController().navigate(
                                         ServerSelectionFragmentDirections.actionServerSelectionFragmentToBrowserFragment(
                                             server4
@@ -159,15 +125,6 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
                         }
 
                         override fun onItemLongClick(view: View?, position: Int) {
-
-                            analytics.logEvent(
-                                AnalyticsEvent.NavigationEvent(
-                                    status = AnalyticsConstant.LONG_CLICK,
-                                    origin = AnalyticsConstant.SERVER
-                                )
-                            )
-
-
                             Toast.makeText(requireActivity(), "Please Click", Toast.LENGTH_SHORT)
                                 .show()
                         }
@@ -195,6 +152,19 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
 
         val adapter = CustomAdapter(data)
         binding.recyclerview.adapter = adapter
+    }
+
+    private fun showRecursiveAds() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showNativeAd()
+                    showDropDown()
+                    showInterstitialAd { }
+                    delay(10000L)
+                }
+            }
+        }
     }
 
     private fun showInterstitialAd(callback: () -> Unit) {
@@ -225,25 +195,19 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
     }
 
     private fun showNativeAd() {
-        if (remoteConfig.nativeAd) {
-            nativeAd = googleManager.createNativeAdSmall()
-            nativeAd?.let {
-                val nativeAdLayoutBinding = NativeAdBannerLayoutBinding.inflate(layoutInflater)
-                nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
-                binding.nativeView.removeAllViews()
-                binding.nativeView.addView(nativeAdLayoutBinding.root)
-                binding.nativeView.visibility = View.VISIBLE
-            }
+        nativeAd = googleManager.createNativeAdSmall()
+        nativeAd?.let {
+            val nativeAdLayoutBinding = NativeAdBannerLayoutBinding.inflate(layoutInflater)
+            nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
+            binding.nativeView.removeAllViews()
+            binding.nativeView.addView(nativeAdLayoutBinding.root)
+            binding.nativeView.visibility = View.VISIBLE
         }
     }
 
     private fun showDropDown() {
         val nativeAdCheck = googleManager.createNativeFull()
-        val nativeAd = googleManager.createNativeFull()
-        Log.d("ggg_nul", "nativeAd:${nativeAdCheck}")
-
         nativeAdCheck?.let {
-            Log.d("ggg_lest", "nativeAdEx:${nativeAd}")
             binding.apply {
                 dropLayout.bringToFront()
                 nativeViewDrop.bringToFront()
@@ -258,40 +222,11 @@ class ServerSelectionFragment : BaseFragment<FragmentServerSelectionBinding>() {
             binding.btnDropDown.setOnClickListener {
                 binding.dropLayout.visibility = View.GONE
 
-                analytics.logEvent(
-                    AnalyticsEvent.AdDropDown(
-                        click = AnalyticsConstant.DROP_DOWN_BTN_CLICKED,
-                        origin = AnalyticsConstant.DASHBOARD
-                    )
-                )
             }
             binding.btnDropUp.visibility = View.INVISIBLE
-
         }
 
     }
 
-    private fun showRecursiveAds() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                while (this.isActive) {
-                    showNativeAd()
-                    if (remoteConfig.showDropDownAd) {
-                        showDropDown()
-                    }
-                    delay(250L)
-                }
-            }
-        }
-    }
-    private fun showRecursiveInterAd() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                while (this.isActive) {
-                    showInterstitialAd {  }
-                    delay(950L)
-                }
-            }
-        }
-    }
+
 }

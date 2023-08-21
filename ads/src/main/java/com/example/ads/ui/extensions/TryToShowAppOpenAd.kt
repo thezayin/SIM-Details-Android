@@ -1,9 +1,9 @@
 package com.example.ads.ui.extensions
 
-import com.example.ads.GoogleManager
-import com.example.ads.ui.OpenAppAdViewModel
 import android.app.Activity
 import android.util.Log
+import com.example.ads.GoogleManager
+import com.example.ads.ui.OpenAppAdViewModel
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 
@@ -12,8 +12,8 @@ private const val TAG = "TryToShowAppOpenAd"
 fun Activity.tryToShowAppOpenAd(
     googleManager: GoogleManager,
     viewModel: OpenAppAdViewModel,
-    action: ((adShown:Boolean) -> Unit)? = null
-){
+    action: ((adShown: Boolean) -> Unit)? = null
+) {
     if (viewModel.tryToShowAd) {
         val ad = googleManager.createAppOpenAd()
         ad?.fullScreenContentCallback = object : FullScreenContentCallback() {

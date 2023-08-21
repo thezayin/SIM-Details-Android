@@ -63,9 +63,9 @@ class GoogleManager @Inject constructor(
                     .build()
             )
 
-        googleNativeSmall = GoogleNativeSmall(context);
-        googleInterstitial = GoogleInterstitial(context);
-        googleAppOpen = GoogleAppOpen(context);
+        googleNativeSmall = GoogleNativeSmall(context)
+        googleInterstitial = GoogleInterstitial(context)
+        googleAppOpen = GoogleAppOpen(context)
         googleNativeFull = GoogleNativeFull(context)
         googleRewarded = GoogleRewarded(context)
         googleNativeForLanguage = GoogleNativeForLanguage(context)
@@ -80,11 +80,11 @@ class GoogleManager @Inject constructor(
     fun createRewardedAd(type: GoogleRewardedType? = null): RewardedAd? {
 
         if (type == GoogleRewardedType.HIGH) {
-            return googleRewarded?.getHighFloorAd(context);
+            return googleRewarded?.getHighFloorAd(context)
         } else if (type == GoogleRewardedType.MEDIUM) {
-            return googleRewarded?.getMediumAd(context);
+            return googleRewarded?.getMediumAd(context)
         } else {
-            return googleRewarded?.getDefaultAd(context);
+            return googleRewarded?.getDefaultAd(context)
         }
     }
 
@@ -97,29 +97,29 @@ class GoogleManager @Inject constructor(
 
         return when (type) {
             GoogleInterstitialType.HIGH -> {
-                googleInterstitial?.getHighFloorAd(context);
+                googleInterstitial?.getHighFloorAd(context)
             }
 
             GoogleInterstitialType.MEDIUM -> {
-                googleInterstitial?.getMediumAd(context);
+                googleInterstitial?.getMediumAd(context)
             }
 
             else -> {
-                googleInterstitial?.getDefaultAd(context);
+                googleInterstitial?.getDefaultAd(context)
             }
         }
     }
 
     fun createNativeFull(): NativeAd? {
-        return googleNativeFull?.getDefaultAd(context);
+        return googleNativeFull?.getDefaultAd(context)
     }
 
     fun createNativeAdSmall(): NativeAd? {
-        return googleNativeSmall?.getDefaultAd(context);
+        return googleNativeSmall?.getDefaultAd(context)
     }
 
     fun createAppOpenAd(): AppOpenAd? {
-        return googleAppOpen?.getAd(context);
+        return googleAppOpen?.getAd(context)
     }
 
     fun createNativeAdForLanguage(): NativeAd? {

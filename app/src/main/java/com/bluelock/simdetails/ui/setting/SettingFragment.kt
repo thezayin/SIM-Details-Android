@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -15,15 +16,13 @@ import com.bluelock.simdetails.R
 import com.bluelock.simdetails.databinding.FragmentSettingBinding
 import com.bluelock.simdetails.remote.RemoteConfig
 import com.bluelock.simdetails.ui.base.BaseFragment
+import com.bluelock.simdetails.utils.isConnected
 import com.example.ads.GoogleManager
 import com.example.ads.databinding.MediumNativeAdLayoutBinding
-import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
 import com.example.analytics.dependencies.Analytics
-import com.example.analytics.events.AnalyticsEvent
 import com.example.analytics.qualifiers.GoogleAnalytics
-import com.example.analytics.utils.AnalyticsConstant
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -53,74 +52,24 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
     override fun onCreatedView() {
         observer()
-        showNativeAd()
-        if (remoteConfig.showDropDownAd) {
-            showDropDown()
+        if (remoteConfig.nativeAd) {
+            showNativeAd()
+            showRecursiveAds()
         }
-        showRecursiveAds()
-        showRecursiveInterAd()
     }
 
-    private fun showRecursiveAds() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                while (this.isActive) {
-                    showNativeAd()
-                    if (remoteConfig.showDropDownAd) {
-                        showDropDown()
-                    }
-                    delay(250L)
-                }
-            }
-        }
-    }
     override fun onDestroyed() {
-        showInterstitialAd { }
+//nothing
     }
-    private fun showRecursiveInterAd() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                while (this.isActive) {
-                    showInterstitialAd {  }
-                    delay(950L)
-                }
-            }
-        }
-    }
+
     private fun observer() {
         lifecycleScope.launch {
             binding.apply {
-                if (remoteConfig.showTitle) {
-                    textView.visibility = View.VISIBLE
-                } else {
-                    textView.visibility = View.INVISIBLE
-                }
-
                 btnBack.setOnClickListener {
-                    analytics.logEvent(
-                        AnalyticsEvent.NavigationEvent(
-                            status = AnalyticsConstant.GO_BACK,
-                            origin = AnalyticsConstant.SETTING_FRAGMENT
-                        )
-                    )
-
-
-                    showInterstitialAd {
-                        showInterstitialAd {
-                            findNavController().navigateUp()
-                        }
-                    }
+                    findNavController().navigateUp()
                 }
 
                 lTerm.setOnClickListener {
-
-                    analytics.logEvent(
-                        AnalyticsEvent.NavigationEvent(
-                            status = AnalyticsConstant.TERMS_COND,
-                            origin = AnalyticsConstant.SETTING_FRAGMENT
-                        )
-                    )
-
                     showInterstitialAd {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
@@ -130,13 +79,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     }
                 }
                 lPrivacy.setOnClickListener {
-                    analytics.logEvent(
-                        AnalyticsEvent.NavigationEvent(
-                            status = AnalyticsConstant.PRIVACY_POLICY,
-                            origin = AnalyticsConstant.SETTING_FRAGMENT
-                        )
-                    )
-
                     showInterstitialAd {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
@@ -146,13 +88,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     }
                 }
                 lContact.setOnClickListener {
-                    analytics.logEvent(
-                        AnalyticsEvent.NavigationEvent(
-                            status = AnalyticsConstant.CONTACT_US,
-                            origin = AnalyticsConstant.SETTING_FRAGMENT
-                        )
-                    )
-
                     showInterstitialAd {
                         val emailIntent = Intent(
                             Intent.ACTION_SENDTO,
@@ -164,13 +99,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     }
                 }
                 lShare.setOnClickListener {
-                    analytics.logEvent(
-                        AnalyticsEvent.NavigationEvent(
-                            status = AnalyticsConstant.SHARE_APP,
-                            origin = AnalyticsConstant.SETTING_FRAGMENT
-                        )
-                    )
-
                     try {
                         val shareIntent = Intent(Intent.ACTION_SEND)
                         shareIntent.type = "text/plain"
@@ -185,12 +113,23 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     } catch (e: java.lang.Exception) {
                         Log.d("jeje_e", e.toString())
                     }
-
                 }
             }
         }
     }
 
+    private fun showRecursiveAds() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showNativeAd()
+                    showDropDown()
+                    showInterstitialAd { }
+                    delay(20000L)
+                }
+            }
+        }
+    }
 
     private fun showInterstitialAd(callback: () -> Unit) {
         if (remoteConfig.showInterstitial) {
@@ -221,50 +160,39 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
 
     private fun showNativeAd() {
-        if (remoteConfig.nativeAd) {
-            nativeAd = googleManager.createNativeAdSmall()
+        if (!requireContext().isConnected()) return
+            nativeAd = googleManager.createNativeAdForLanguage()
+
             nativeAd?.let {
-                val nativeAdLayoutBinding = NativeAdBannerLayoutBinding.inflate(layoutInflater)
-                nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
-                binding.nativeView.removeAllViews()
+                val nativeAdLayoutBinding = MediumNativeAdLayoutBinding.inflate(layoutInflater)
+                nativeAdLayoutBinding.nativeAdView.loadNativeAd(nativeAd)
+                nativeAdLayoutBinding.nativeAdView.mediaView?.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                 binding.nativeView.addView(nativeAdLayoutBinding.root)
-                binding.nativeView.visibility = View.VISIBLE
+
             }
         }
-    }
 
-    private fun showDropDown() {
-        val nativeAdCheck = googleManager.createNativeFull()
-        val nativeAd = googleManager.createNativeFull()
-        Log.d("ggg_nul", "nativeAd:${nativeAdCheck}")
+        private fun showDropDown() {
+            val nativeAdCheck = googleManager.createNativeFull()
+            nativeAdCheck?.let {
+                binding.apply {
+                    dropLayout.bringToFront()
+                    nativeViewDrop.bringToFront()
+                }
+                val nativeAdLayoutBinding = MediumNativeAdLayoutBinding.inflate(layoutInflater)
+                nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
+                binding.nativeViewDrop.removeAllViews()
+                binding.nativeViewDrop.addView(nativeAdLayoutBinding.root)
+                binding.nativeViewDrop.visibility = View.VISIBLE
+                binding.dropLayout.visibility = View.VISIBLE
 
-        nativeAdCheck?.let {
-            Log.d("ggg_lest", "nativeAdEx:${nativeAd}")
-            binding.apply {
-                dropLayout.bringToFront()
-                nativeViewDrop.bringToFront()
+                binding.btnDropDown.setOnClickListener {
+                    binding.dropLayout.visibility = View.GONE
+                }
+                binding.btnDropUp.visibility = View.INVISIBLE
+
             }
-            val nativeAdLayoutBinding = MediumNativeAdLayoutBinding.inflate(layoutInflater)
-            nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
-            binding.nativeViewDrop.removeAllViews()
-            binding.nativeViewDrop.addView(nativeAdLayoutBinding.root)
-            binding.nativeViewDrop.visibility = View.VISIBLE
-            binding.dropLayout.visibility = View.VISIBLE
-
-            binding.btnDropDown.setOnClickListener {
-                binding.dropLayout.visibility = View.GONE
-
-                analytics.logEvent(
-                    AnalyticsEvent.AdDropDown(
-                        click = AnalyticsConstant.DROP_DOWN_BTN_CLICKED,
-                        origin = AnalyticsConstant.DASHBOARD
-                    )
-                )
-            }
-            binding.btnDropUp.visibility = View.INVISIBLE
 
         }
 
     }
-
-}

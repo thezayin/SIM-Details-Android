@@ -9,7 +9,7 @@ import com.google.android.gms.ads.AdView
 fun createBannerAd(context: Context, adUnitId: String = GoogleBanner.BANNER_ALL): AdView {
     return AdView(context).apply {
         this.adUnitId = adUnitId
-        setAdSize(AdSize.BANNER)
+        adSize = AdSize.BANNER
         loadAd(AdRequest.Builder().build())
     }
 }

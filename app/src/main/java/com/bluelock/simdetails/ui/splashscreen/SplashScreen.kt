@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import com.bluelock.simdetails.databinding.SplashscreenBinding
 import com.bluelock.simdetails.remote.RemoteConfig
@@ -22,13 +20,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@AndroidEntryPoint
+
 @SuppressLint("CustomSplashScreen")
-@Suppress("DEPRECATION")
+@Suppress("UNREACHABLE_CODE")
+@AndroidEntryPoint
 class SplashScreen : AppCompatActivity() {
     private lateinit var binding: SplashscreenBinding
 
-    var progressStatus = 0
+    private var progressStatus = 0
 
     @Inject
     lateinit var googleManager: GoogleManager
@@ -36,15 +35,13 @@ class SplashScreen : AppCompatActivity() {
     @Inject
     lateinit var remoteConfig: RemoteConfig
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = SplashscreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
         binding.apply {
+
 
             progressStatus = progressBar.progress
 
@@ -59,7 +56,7 @@ class SplashScreen : AppCompatActivity() {
                     } else {
                         if (remoteConfig.showAppOpenAd) {
                             if (getAppOpenAd()) {
-                                Log.d("jejesplash", "done")
+                                Log.d("jeje_splash", "done")
                             } else {
                                 showInterstitialAd {
                                     navigateToNextScreen()
@@ -77,17 +74,16 @@ class SplashScreen : AppCompatActivity() {
         }
     }
 
-
-
-    private fun navigateToNextScreen() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+    fun navigateToNextScreen() {
+        this.let {
+            val intent = Intent(it, MainActivity::class.java)
+            it.startActivity(intent)
+        }
     }
+
     private fun getAppOpenAd(): Boolean {
 
         if (!this.isConnected()) return false
-
         val ad = googleManager.createAppOpenAd() ?: return false
 
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {

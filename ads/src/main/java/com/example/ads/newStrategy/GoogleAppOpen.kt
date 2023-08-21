@@ -5,9 +5,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.nativead.NativeAd
-import java.util.Arrays
 import java.util.Stack
 
 class GoogleAppOpen(context: Context?) {
@@ -15,7 +12,7 @@ class GoogleAppOpen(context: Context?) {
     private var adUnits: ArrayList<ArrayList<Any>>? = null
     private val openHigh = "ca-app-pub-9507635869843997/8513033073"
     private val openMedium = "ca-app-pub-9507635869843997/2079169437"
-    private val openOne= "ca-app-pub-9507635869843997/8453006093"
+    private val openOne = "ca-app-pub-9507635869843997/8453006093"
     private val openTwo = "ca-app-pub-9507635869843997/4242298348"
     private val openThree = "ca-app-pub-9507635869843997/9303053338"
 

@@ -1,7 +1,6 @@
 package com.bluelock.simdetails.ui.webview
 
-import android.app.ProgressDialog
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +22,7 @@ import com.example.ads.databinding.NativeAdBannerLayoutBinding
 import com.example.ads.newStrategy.types.GoogleInterstitialType
 import com.example.ads.ui.binding.loadNativeAd
 import com.example.analytics.dependencies.Analytics
-import com.example.analytics.events.AnalyticsEvent
 import com.example.analytics.qualifiers.GoogleAnalytics
-import com.example.analytics.utils.AnalyticsConstant
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -61,20 +58,18 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
 
     private lateinit var dialog: BottomSheetDialog
     private val args: BrowserFragmentArgs by navArgs()
-    lateinit var progress: ProgressDialog
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreatedView() {
-        showNativeAd()
-        showRecursiveAds()
-        showRecursiveInterAd()
-        if (remoteConfig.showDropDownAd) {
-            showDropDown()
+
+        if (remoteConfig.nativeAd) {
+            showNativeAd()
+            showRecursiveAds()
         }
         binding.apply {
             icBack.setOnClickListener {
-                showInterstitialAd {
                     findNavController().navigateUp()
-                }
+
             }
             webView.webViewClient = WebViewClient()
             val url: String = args.url
@@ -118,12 +113,24 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
     }
 
     override fun onDestroyed() {
-        showInterstitialAd { }
     }
 
+    private fun showRecursiveAds() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (this.isActive) {
+                    showNativeAd()
+                    showDropDown()
+                    showInterstitialAd { }
+                    delay(10000L)
+                }
+            }
+        }
+    }
 
     private fun showInterstitialAd(callback: () -> Unit) {
         if (remoteConfig.showInterstitial) {
+
             val ad: InterstitialAd? =
                 googleManager.createInterstitialAd(GoogleInterstitialType.MEDIUM)
 
@@ -150,25 +157,19 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
     }
 
     private fun showNativeAd() {
-        if (remoteConfig.nativeAd) {
-            nativeAd = googleManager.createNativeFull()
-            nativeAd?.let {
-                val nativeAdLayoutBinding = NativeAdBannerLayoutBinding.inflate(layoutInflater)
-                nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
-                binding.nativeView.removeAllViews()
-                binding.nativeView.addView(nativeAdLayoutBinding.root)
-                binding.nativeView.visibility = View.VISIBLE
-            }
+        nativeAd = googleManager.createNativeFull()
+        nativeAd?.let {
+            val nativeAdLayoutBinding = NativeAdBannerLayoutBinding.inflate(layoutInflater)
+            nativeAdLayoutBinding.nativeAdView.loadNativeAd(ad = it)
+            binding.nativeView.removeAllViews()
+            binding.nativeView.addView(nativeAdLayoutBinding.root)
+            binding.nativeView.visibility = View.VISIBLE
         }
     }
 
     private fun showDropDown() {
         val nativeAdCheck = googleManager.createNativeFull()
-        val nativeAd = googleManager.createNativeFull()
-        Log.d("ggg_nul", "nativeAd:${nativeAdCheck}")
-
         nativeAdCheck?.let {
-            Log.d("ggg_lest", "nativeAdEx:${nativeAd}")
             binding.apply {
                 dropLayout.bringToFront()
                 nativeViewDrop.bringToFront()
@@ -182,13 +183,6 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
 
             binding.btnDropDown.setOnClickListener {
                 binding.dropLayout.visibility = View.GONE
-
-                analytics.logEvent(
-                    AnalyticsEvent.AdDropDown(
-                        click = AnalyticsConstant.DROP_DOWN_BTN_CLICKED,
-                        origin = AnalyticsConstant.DASHBOARD
-                    )
-                )
             }
             binding.btnDropUp.visibility = View.INVISIBLE
 
@@ -196,27 +190,4 @@ class BrowserFragment : BaseFragment<FragmentBrowserBinding>() {
 
     }
 
-    private fun showRecursiveAds() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                while (this.isActive) {
-                    showNativeAd()
-                    if (remoteConfig.showDropDownAd) {
-                        showDropDown()
-                    }
-                    delay(250L)
-                }
-            }
-        }
-    }
-    private fun showRecursiveInterAd() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                while (this.isActive) {
-                    showInterstitialAd {  }
-                    delay(950L)
-                }
-            }
-        }
-    }
 }

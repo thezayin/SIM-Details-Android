@@ -5,11 +5,8 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.appopen.AppOpenAd
-import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
 import timber.log.Timber
-import java.util.Arrays
 import java.util.Stack
 
 //
@@ -18,7 +15,7 @@ class GoogleNativeHome(context: Context?) {
     private var adUnits: ArrayList<ArrayList<Any>>? = null
     private val openHigh = "ca-app-pub-9507635869843997/7683113233"
     private val openMedium = "ca-app-pub-9507635869843997/1500848264"
-    private val openOne= "ca-app-pub-9507635869843997/5056949894"
+    private val openOne = "ca-app-pub-9507635869843997/5056949894"
     private val openTwo = "ca-app-pub-9507635869843997/3743868224"
     private val openThree = "ca-app-pub-9507635869843997/2430786553"
 

@@ -1,8 +1,8 @@
 package com.example.ads.ui.extensions
 
+import android.content.Context
 import com.example.ads.GoogleManager
 import com.example.ads.ui.dialog.NativeInterstitialAdDialog
-import android.content.Context
 import com.google.android.gms.ads.nativead.NativeAd
 import kotlinx.coroutines.CoroutineScope
 

@@ -11,9 +11,9 @@
     <color name="bluish">#80ced6</color>
     <color name="brown">#a96e5b</color>
 
-    <color name="back_ground">#1f1f1f</color>
-    <color name="text_color">#83868b</color>
-    <color name="icon_color">#83868b</color>
+    <color name="back_ground">#19ffffff</color>
+    <color name="text_color">#FFF</color>
+    <color name="icon_color">#FFF</color>
     <color name="card_color">#3C3E42</color>
 
     <color name="light_gray">#DEDEDE</color>

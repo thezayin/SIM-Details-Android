@@ -5,7 +5,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import java.util.Arrays
 import java.util.Stack
 
 //package com.vyroai.autocutcut.ads.max;
@@ -15,7 +14,7 @@ class GoogleInterstitial(context: Context?) {
     private var adUnits: ArrayList<ArrayList<Any>>? = null
     private val openHigh = "ca-app-pub-9507635869843997/5200420125"
     private val openMedium = "ca-app-pub-9507635869843997/3887338459"
-    private val openOne= "ca-app-pub-9507635869843997/8483961530"
+    private val openOne = "ca-app-pub-9507635869843997/8483961530"
     private val openTwo = "ca-app-pub-9507635869843997/7170879869"
     private val openThree = "ca-app-pub-9507635869843997/4510154986"
 

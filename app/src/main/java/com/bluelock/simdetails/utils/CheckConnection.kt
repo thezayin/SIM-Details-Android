@@ -61,7 +61,4 @@ fun checkForInternet(context: Context): Boolean {
         @Suppress("DEPRECATION")
         return networkInfo.isConnected
     }
-//        MobileAds.initialize(requireActivity()) {}
-//        val adRequest = AdRequest.Builder().build()
-//        _binding.adView1.loadAd(adRequest)
 }

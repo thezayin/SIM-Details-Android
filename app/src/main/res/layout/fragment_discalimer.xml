@@ -22,10 +22,10 @@
         android:layout_marginHorizontal="@dimen/_25sdp"
         android:layout_marginTop="@dimen/_60sdp"
 
-        android:fontFamily="sans-serif-condensed-medium"
+        android:fontFamily="@font/aspira_bold"
         android:text="@string/disclaimer"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/_16ssp"
+        android:textSize="@dimen/_22ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_25sdp"
         android:layout_marginTop="@dimen/_100sdp"
-        android:fontFamily="sans-serif-condensed-medium"
+        android:fontFamily="@font/aspira_regular"
         android:paddingHorizontal="@dimen/_25sdp"
         android:text="@string/all_the_information_provided_in_this_application_is_hosted_on_public_doamins_and_copyright_of_their_respective_owners_we_do_not_claim_any_information_provided_in_the_application_we_just_provided_an_organised_way_of_surfing_and_no_pledge_any_given_that_hte_information_provided_is_exact"
         android:textColor="@color/text_color"
